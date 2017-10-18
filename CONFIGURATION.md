@@ -1,8 +1,8 @@
-# Configuration for Widebullet
+# Configuration for multimissile
 
-A configuration file format for Widebullet is [TOML](https://github.com/toml-lang/toml).
+A configuration file format for multimissile is [TOML](https://github.com/toml-lang/toml).
 
-A configuration for Widebullet has some sections. A example is [here](config/example.toml).
+A configuration for multimissile has some sections. A example is [here](config/example.toml).
 
  * [Global Section](#core-section)
  * [Endpoints Section](#endpoints-section)
@@ -11,7 +11,7 @@ A configuration for Widebullet has some sections. A example is [here](config/exa
 
 |name               |type  |description                                 |default         |note                                                              |
 |-------------------|------|--------------------------------------------|----------------|------------------------------------------------------------------|
-|Port               |string|port number or unix socket path             |29300           |e.g.)29300, unix:/tmp/wbt.sock <br/> `-p` option can overwrite    |
+|Port               |string|port number or unix socket path             |29300           |e.g.)29300, unix:/tmp/msl.sock <br/> `-p` option can overwrite    |
 |LogLevel           |string|log-level                                   |error           |                                                                  |
 |Timeout            |int   |timeout for proxying request                 |5               |unit is second                                                    |
 |MaxIdleConnsPerHost|int   |maximum idle to keep per-host               |100             |                                                                  |

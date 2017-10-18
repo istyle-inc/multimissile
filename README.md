@@ -1,8 +1,8 @@
-# Widebullet
+# multimissile
 
-[![Travis](https://img.shields.io/travis/mercari/widebullet.svg?style=flat-square)](https://travis-ci.org/mercari/widebullet) [![Go Report Card](https://goreportcard.com/badge/github.com/mercari/widebullet)](https://goreportcard.com/report/github.com/mercari/widebullet)
+[![Travis](https://img.shields.io/travis/mercari/multimissile.svg?style=flat-square)](https://travis-ci.org/mercari/multimissile) [![Go Report Card](https://goreportcard.com/badge/github.com/istyle-inc/multimissile)](https://goreportcard.com/report/github.com/istyle-inc/multimissile)
 
-Widebullet is [JSON-RPC](http://www.jsonrpc.org/) base API gateway server. It implements [JSON-RPC batch](http://www.jsonrpc.org/specification#batch) endpoints with extended format for HTTP REST requests (see [SPEC](/SPEC.md)). For example, it receives one single JSON-RPC array which defines multiple HTTP requests and converts it into multiple concurrent HTTP requests. If you have multiple backend microservices and need to request them at same time for one transaction, Widebullet simplifies it.
+multimissile is [JSON-RPC](http://www.jsonrpc.org/) base API gateway server. It implements [JSON-RPC batch](http://www.jsonrpc.org/specification#batch) endpoints with extended format for HTTP REST requests (see [SPEC](/SPEC.md)). For example, it receives one single JSON-RPC array which defines multiple HTTP requests and converts it into multiple concurrent HTTP requests. If you have multiple backend microservices and need to request them at same time for one transaction, multimissile simplifies it.
 
 # Status
 
@@ -10,22 +10,22 @@ Production ready.
 
 # Requirement
 
-Widebullet requires Go1.8 or later.
+multimissile requires Go1.8 or later.
 
 # Installation
 
-Widebullet provides a executable named `wbt` to kick server. To install `wbt`, use `go get`,
+multimissile provides a executable named `msl` to kick server. To install `msl`, use `go get`,
 
 ```
-$ go get -u github.com/mercari/widebullet/...
+$ go get -u github.com/istyle-inc/multimissile/...
 ```
 
 # Usage
 
-To run `wbt`, you must provide configuration path via `-c` option (See [CONFIGURATION.md](/CONFIGURATION.md)) about details and [`config/example.toml`](/config/example.toml) for example usage.
+To run `msl`, you must provide configuration path via `-c` option (See [CONFIGURATION.md](/CONFIGURATION.md)) about details and [`config/example.toml`](/config/example.toml) for example usage.
 
 ```
-$ wbt -c config/example.toml
+$ msl -c config/example.toml
 ```
 
 Use `-help` to see more options.

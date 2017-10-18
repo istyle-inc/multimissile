@@ -7,9 +7,9 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/mercari/widebullet"
-	"github.com/mercari/widebullet/config"
-	"github.com/mercari/widebullet/jsonrpc"
+	"github.com/istyle-inc/multimissile"
+	"github.com/istyle-inc/multimissile/config"
+	"github.com/istyle-inc/multimissile/jsonrpc"
 )
 
 func buildRequestURI(ep, method, qs string) string {
@@ -31,7 +31,7 @@ func buildURLEncodedString(params jsonrpc.RequestParams, method string) (string,
 		case json.Number:
 			values.Set(k, fmt.Sprintf("%s", v))
 		default:
-			return "", fmt.Errorf("wbt supports only string and number")
+			return "", fmt.Errorf("msl supports only string and number")
 		}
 	}
 
@@ -76,7 +76,7 @@ func buildHttpError2JsonRpcErrorResponse(resp *http.Response, id string, time fl
 func buildHttpRequest(reqj *jsonrpc.Request, forwardHeaders *http.Header) (*http.Request, error) {
 	var reqh *http.Request
 
-	ep, err := config.FindEp(wbt.Config, reqj.Ep)
+	ep, err := config.FindEp(msl.Config, reqj.Ep)
 	if err != nil {
 		return reqh, err
 	}
@@ -104,7 +104,7 @@ func buildHttpRequest(reqj *jsonrpc.Request, forwardHeaders *http.Header) (*http
 
 	ua := forwardHeaders.Get("User-Agent")
 	if ua == "" {
-		reqh.Header.Set("User-Agent", wbt.ServerHeader())
+		reqh.Header.Set("User-Agent", msl.ServerHeader())
 	} else {
 		reqh.Header.Set("User-Agent", ua)
 	}

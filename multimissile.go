@@ -1,11 +1,11 @@
-package wbt
+package msl
 
 import (
 	"fmt"
 	"runtime"
 
-	"github.com/mercari/widebullet/config"
-	"github.com/mercari/widebullet/wlog"
+	"github.com/istyle-inc/multimissile/config"
+	"github.com/istyle-inc/multimissile/wlog"
 )
 
 const (
@@ -19,11 +19,11 @@ var (
 )
 
 func ServerHeader() string {
-	return fmt.Sprintf("WideBullet %s", Version)
+	return fmt.Sprintf("multimissile %s", Version)
 }
 
 func PrintVersion() {
-	fmt.Printf(`wbt %s
+	fmt.Printf(`msl %s
 Compiler: %s %s
 Copyright (C) 2016 Mercari, Inc.
 `,

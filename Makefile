@@ -1,9 +1,9 @@
 TARGETS_NOVENDOR=$(shell glide novendor)
 
-all: wbt
+all: msl
 
-wbt: cmd/wbt/*.go server/*.go jsonrpc/*.go config/*.go wlog/*.go *.go
-	go build cmd/wbt/wbt.go
+msl: cmd/msl/*.go server/*.go jsonrpc/*.go config/*.go wlog/*.go *.go
+	go build cmd/msl/msl.go
 
 bundle:
 	glide install
@@ -15,4 +15,4 @@ fmt:
 	@echo $(TARGETS_NOVENDOR) | xargs go fmt
 
 clean:
-	rm -rf wbt
+	rm -rf msl
