@@ -9,15 +9,23 @@ import (
 )
 
 const (
-	DefaultPort                = "29300"
-	DefaultLogLevel            = "error"
-	DefaultTimeout             = 5
+	// DefaultPort port number served multimissile by default
+	DefaultPort = "29300"
+	// DefaultLogLevel default log level multimissile use error level
+	DefaultLogLevel = "error"
+	// DefaultTimeout default time request will be timeout
+	DefaultTimeout = 5
+	// DefaultMaxIdleConnsPerHost max value of idle connection per each host
 	DefaultMaxIdleConnsPerHost = 100
-	DefaultIdleConnTimeout     = 30
-	DefaultProxyReadTimeout    = 60
-	DefaultShutdownTimeout     = 10
+	// DefaultIdleConnTimeout default time idle connection will be expired
+	DefaultIdleConnTimeout = 30
+	// DefaultProxyReadTimeout default time proxy read will be timeout
+	DefaultProxyReadTimeout = 60
+	// DefaultShutdownTimeout this might not be used any where?
+	DefaultShutdownTimeout = 10
 )
 
+// Config struct of configure
 type Config struct {
 	Port                string
 	LogLevel            string
@@ -30,30 +38,40 @@ type Config struct {
 	Endpoints           []EndPoint
 }
 
+// EndPoint struct of one of Endpoints
 type EndPoint struct {
-	Name             string
-	Ep               string
-	ProxySetHeaders  [][]string
+	// Endpoint Name
+	Name string
+	// Endpoint URL
+	Ep string
+	// Headers to set http-headers
+	ProxySetHeaders [][]string
+	// Headers to pass from origin-request
 	ProxyPassHeaders [][]string
+	// Threshold values of http status code, would be recognize as success
+	AcceptableHTTPStatuses []int
+	// Threshold values of http status code, would be recognize as failure
+	ExceptableHTTPStatuses []int
 }
 
+// LoadBytes load config file and unmarshal to config struct
 func LoadBytes(bytes []byte) (Config, error) {
 	var config Config
-	if err := toml.Unmarshal(bytes, &config); err != nil {
-		return config, err
-	}
-	return config, nil
+	err := toml.Unmarshal(bytes, &config)
+	return config, err
 }
 
+// Load load config from file path
 func Load(confPath string) (Config, error) {
+	var config Config
 	bytes, err := ioutil.ReadFile(confPath)
 	if err != nil {
-		return Config{}, err
+		return config, err
 	}
 
-	config, err := LoadBytes(bytes)
+	config, err = LoadBytes(bytes)
 	if err != nil {
-		return Config{}, err
+		return config, err
 	}
 
 	if config.Port == "" {
@@ -100,6 +118,7 @@ func Load(confPath string) (Config, error) {
 	return config, nil
 }
 
+// FindEp search endpoint using name
 func FindEp(conf Config, name string) (EndPoint, error) {
 	for _, ep := range conf.Endpoints {
 		if ep.Name == name {

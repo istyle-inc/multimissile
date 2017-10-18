@@ -16,6 +16,11 @@ ProxySetHeaders = [
 ProxyPassHeaders = [
     ["Authorization", "X-Auth-Token"]
 ]
+AcceptableHTTPStatuses = [
+    200,
+    201,
+    204
+]
 
 [[Endpoints]]
 Name = "ep-2"
@@ -25,4 +30,8 @@ ProxySetHeaders = [
 ]
 ProxyPassHeaders = [
     ["Authorization", "X-Auth-Token2"]
+]
+ExceptableHTTPStatuses = [
+    500,
+    404
 ]
