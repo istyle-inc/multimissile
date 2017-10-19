@@ -23,7 +23,7 @@ type Request struct {
 	Params     RequestParams `json:"params,omitempty"`
 	ID         string        `json:"id"`
 	// extention
-	Ep string `json:"ep"`
+	To string `json:"to"`
 }
 
 type Response struct {

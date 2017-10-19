@@ -76,7 +76,7 @@ func buildHttpError2JsonRpcErrorResponse(resp *http.Response, id string, time fl
 func buildHttpRequest(reqj *jsonrpc.Request, forwardHeaders *http.Header) (*http.Request, error) {
 	var reqh *http.Request
 
-	ep, err := config.FindEp(msl.Config, reqj.Ep)
+	ep, err := config.FindTo(msl.Config, reqj.To)
 	if err != nil {
 		return reqh, err
 	}
@@ -88,14 +88,14 @@ func buildHttpRequest(reqj *jsonrpc.Request, forwardHeaders *http.Header) (*http
 
 	switch reqj.HttpMethod {
 	case "POST":
-		uri := buildRequestURI(ep.Ep, reqj.Method, "")
+		uri := buildRequestURI(ep.To, reqj.Method, "")
 		reqh, err = http.NewRequest("POST", uri, strings.NewReader(es))
 		if err != nil {
 			return reqh, err
 		}
 		reqh.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	default:
-		uri := buildRequestURI(ep.Ep, reqj.Method, es)
+		uri := buildRequestURI(ep.To, reqj.Method, es)
 		reqh, err = http.NewRequest("GET", uri, nil)
 		if err != nil {
 			return reqh, err

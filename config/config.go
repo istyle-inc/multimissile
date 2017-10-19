@@ -1,11 +1,11 @@
 package config
 
 import (
-	"errors"
 	"fmt"
 	"io/ioutil"
 
 	"github.com/BurntSushi/toml"
+	"gopkg.in/go-playground/validator.v9"
 )
 
 const (
@@ -27,37 +27,44 @@ const (
 
 // Config struct of configure
 type Config struct {
-	Port                string
-	LogLevel            string
-	Timeout             int
-	MaxIdleConnsPerHost int
-	DisableCompression  bool
-	IdleConnTimeout     int
-	ProxyReadTimeout    int
-	ShutdownTimeout     int
-	Endpoints           []EndPoint
+	Port                string     `validate:"required"`
+	LogLevel            string     `validate:"required"`
+	Timeout             int        `validate:"required"`
+	MaxIdleConnsPerHost int        `validate:"required"`
+	DisableCompression  bool       `validate:"required"`
+	IdleConnTimeout     int        `validate:"required"`
+	ProxyReadTimeout    int        `validate:"required"`
+	ShutdownTimeout     int        `validate:"required"`
+	Endpoints           []EndPoint `validate:"required"`
 }
 
 // EndPoint struct of one of Endpoints
 type EndPoint struct {
-	// Endpoint Name
-	Name string
-	// Endpoint URL
-	Ep string
-	// Headers to set http-headers
-	ProxySetHeaders [][]string
-	// Headers to pass from origin-request
-	ProxyPassHeaders [][]string
-	// Threshold values of http status code, would be recognize as success
+	Name                   string `validate:"required"`
+	To                     string `validate:"required"`
+	ProxySetHeaders        [][]string
+	ProxyPassHeaders       [][]string
 	AcceptableHTTPStatuses []int
-	// Threshold values of http status code, would be recognize as failure
 	ExceptableHTTPStatuses []int
 }
 
+func initialize() Config {
+	return Config{
+		Port:                DefaultPort,
+		LogLevel:            DefaultLogLevel,
+		Timeout:             DefaultTimeout,
+		MaxIdleConnsPerHost: DefaultMaxIdleConnsPerHost,
+		IdleConnTimeout:     DefaultIdleConnTimeout,
+		ProxyReadTimeout:    DefaultProxyReadTimeout,
+		ShutdownTimeout:     DefaultShutdownTimeout,
+	}
+}
+
 // LoadBytes load config file and unmarshal to config struct
-func LoadBytes(bytes []byte) (Config, error) {
-	var config Config
-	err := toml.Unmarshal(bytes, &config)
+func LoadBytes(bytes []byte) (config Config, err error) {
+	config = initialize()
+	err = toml.Unmarshal(bytes, &config)
+
 	return config, err
 }
 
@@ -69,57 +76,18 @@ func Load(confPath string) (Config, error) {
 		return config, err
 	}
 
-	config, err = LoadBytes(bytes)
-	if err != nil {
+	if config, err = LoadBytes(bytes); err != nil {
 		return config, err
 	}
 
-	if config.Port == "" {
-		config.Port = DefaultPort
-	}
+	validate := validator.New()
+	err = validate.Struct(config)
 
-	if config.LogLevel == "" {
-		config.LogLevel = DefaultLogLevel
-	}
-
-	if config.Timeout <= 0 {
-		config.Timeout = DefaultTimeout
-	}
-
-	if config.MaxIdleConnsPerHost <= 0 {
-		config.MaxIdleConnsPerHost = DefaultMaxIdleConnsPerHost
-	}
-
-	if config.IdleConnTimeout <= 0 {
-		config.IdleConnTimeout = DefaultIdleConnTimeout
-	}
-
-	if config.ProxyReadTimeout <= 0 {
-		config.ProxyReadTimeout = DefaultProxyReadTimeout
-	}
-
-	if config.ShutdownTimeout <= 0 {
-		config.ShutdownTimeout = DefaultShutdownTimeout
-	}
-
-	if len(config.Endpoints) == 0 {
-		return config, errors.New("empty Endpoints")
-	}
-
-	for _, ep := range config.Endpoints {
-		if ep.Name == "" {
-			return config, errors.New("empty Endpoint name")
-		}
-		if ep.Ep == "" {
-			return config, errors.New("empty Endpoint URL")
-		}
-	}
-
-	return config, nil
+	return config, err
 }
 
-// FindEp search endpoint using name
-func FindEp(conf Config, name string) (EndPoint, error) {
+// FindTo search endpoint using name
+func FindTo(conf Config, name string) (EndPoint, error) {
 	for _, ep := range conf.Endpoints {
 		if ep.Name == name {
 			return ep, nil
