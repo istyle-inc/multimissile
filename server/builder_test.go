@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mercari/widebullet"
-	"github.com/mercari/widebullet/config"
-	"github.com/mercari/widebullet/jsonrpc"
+	"github.com/istyle-inc/multimissile"
+	"github.com/istyle-inc/multimissile/config"
+	"github.com/istyle-inc/multimissile/jsonrpc"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -42,7 +42,7 @@ func TestBuildHttpRequest(t *testing.T) {
 	err := decoder.Decode(&reqjs)
 	assert.Nil(err)
 
-	wbt.Config, err = config.Load("../config/example.toml")
+	msl.Config, err = config.Load("../config/example.toml")
 	assert.Nil(err)
 
 	headers := make(http.Header)
@@ -52,7 +52,7 @@ func TestBuildHttpRequest(t *testing.T) {
 	for _, reqj := range reqjs {
 		reqh, err := buildHttpRequest(&reqj, &headers)
 		assert.Nil(err)
-		assert.Equal(wbt.ServerHeader(), reqh.Header.Get("User-Agent"))
+		assert.Equal(msl.ServerHeader(), reqh.Header.Get("User-Agent"))
 		assert.Equal("127.0.0.1", reqh.Header.Get("X-Forwarded-For"))
 		reqhs = append(reqhs, *reqh)
 	}

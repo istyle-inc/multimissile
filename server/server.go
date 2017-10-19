@@ -12,10 +12,10 @@ import (
 
 	statsGo "github.com/fukata/golang-stats-api-handler"
 	"github.com/lestrrat/go-server-starter/listener"
-	"github.com/mercari/widebullet"
-	"github.com/mercari/widebullet/config"
-	"github.com/mercari/widebullet/jsonrpc"
-	"github.com/mercari/widebullet/wlog"
+	"github.com/istyle-inc/multimissile"
+	"github.com/istyle-inc/multimissile/config"
+	"github.com/istyle-inc/multimissile/jsonrpc"
+	"github.com/istyle-inc/multimissile/wlog"
 )
 
 var (
@@ -24,7 +24,7 @@ var (
 
 // RegisterHandlers sets handler to serve.
 func RegisterHandlers(mux *http.ServeMux) {
-	mux.HandleFunc("/wbt", wideBulletHandler)
+	mux.HandleFunc("/msl", multimissileHandler)
 
 	statsGo.PrettyPrintEnabled()
 	mux.HandleFunc("/stat/go", statsGo.Handler)
@@ -40,8 +40,8 @@ func SetupClient(config *config.Config) {
 				Timeout:   30 * time.Second,
 				KeepAlive: 30 * time.Second,
 			}).DialContext,
-			MaxIdleConnsPerHost:   wbt.Config.MaxIdleConnsPerHost,
-			DisableCompression:    wbt.Config.DisableCompression,
+			MaxIdleConnsPerHost:   msl.Config.MaxIdleConnsPerHost,
+			DisableCompression:    msl.Config.DisableCompression,
 			IdleConnTimeout:       time.Duration(config.IdleConnTimeout) * time.Second,
 			ResponseHeaderTimeout: time.Duration(config.ProxyReadTimeout) * time.Second,
 		},
@@ -107,18 +107,18 @@ func Run(server *http.Server, config *config.Config) error {
 
 func sendTextResponse(w http.ResponseWriter, result string, code int) {
 	w.Header().Set("Content-Type", "text/plain")
-	w.Header().Set("Server", wbt.ServerHeader())
+	w.Header().Set("Server", msl.ServerHeader())
 	w.WriteHeader(code)
 	fmt.Fprint(w, result)
 }
 
 func sendJsonResponse(w http.ResponseWriter, result string) {
 	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Server", wbt.ServerHeader())
+	w.Header().Set("Server", msl.ServerHeader())
 	fmt.Fprint(w, result)
 }
 
-func wideBulletHandler(w http.ResponseWriter, r *http.Request) {
+func multimissileHandler(w http.ResponseWriter, r *http.Request) {
 	var reqs []jsonrpc.Request
 
 	stime := time.Now()

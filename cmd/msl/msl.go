@@ -10,20 +10,20 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/mercari/widebullet"
-	"github.com/mercari/widebullet/config"
-	"github.com/mercari/widebullet/server"
-	"github.com/mercari/widebullet/wlog"
+	"github.com/istyle-inc/multimissile"
+	"github.com/istyle-inc/multimissile/config"
+	"github.com/istyle-inc/multimissile/server"
+	"github.com/istyle-inc/multimissile/wlog"
 )
 
 func main() {
-	versionPrinted := flag.Bool("v", false, "print widebullet version")
+	versionPrinted := flag.Bool("v", false, "print multimissile version")
 	port := flag.String("p", "", "listening port number or socket path")
 	configPath := flag.String("c", "", "configuration file path")
 	flag.Parse()
 
 	if *versionPrinted {
-		wbt.PrintVersion()
+		msl.PrintVersion()
 		return
 	}
 
@@ -38,23 +38,23 @@ func main() {
 	}
 
 	// set global configuration
-	wbt.Config = conf
-	wbt.AL = wlog.AccessLogger(conf.LogLevel)
-	wbt.EL = wlog.ErrorLogger(conf.LogLevel)
+	msl.Config = conf
+	msl.AL = wlog.AccessLogger(conf.LogLevel)
+	msl.EL = wlog.ErrorLogger(conf.LogLevel)
 
 	// Setup server
 	mux := http.NewServeMux()
 	server.RegisterHandlers(mux)
-	server.SetupClient(&wbt.Config)
+	server.SetupClient(&msl.Config)
 
 	srv := &http.Server{
 		Handler: mux,
 	}
 
 	go func() {
-		wbt.EL.Out(wlog.Debug, "Start running server")
-		if err := server.Run(srv, &wbt.Config); err != nil {
-			wbt.EL.Out(wlog.Error, "Failed to run server: %s", err)
+		msl.EL.Out(wlog.Debug, "Start running server")
+		if err := server.Run(srv, &msl.Config); err != nil {
+			msl.EL.Out(wlog.Error, "Failed to run server: %s", err)
 		}
 	}()
 
@@ -63,15 +63,15 @@ func main() {
 	signal.Notify(sigCh, syscall.SIGTERM)
 	<-sigCh
 
-	wbt.EL.Out(wlog.Debug, "Start to shutdown server")
+	msl.EL.Out(wlog.Debug, "Start to shutdown server")
 	timeout := time.Duration(conf.ShutdownTimeout) * time.Second
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
 	if err := srv.Shutdown(ctx); err != nil {
-		wbt.EL.Out(wlog.Error, "Failed to shutdown server: %s", err)
+		msl.EL.Out(wlog.Error, "Failed to shutdown server: %s", err)
 		return
 	}
 
-	wbt.EL.Out(wlog.Debug, "Successfully shutdown server")
+	msl.EL.Out(wlog.Debug, "Successfully shutdown server")
 }

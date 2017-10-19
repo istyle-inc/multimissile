@@ -9,9 +9,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mercari/widebullet"
-	"github.com/mercari/widebullet/config"
-	"github.com/mercari/widebullet/jsonrpc"
+	"github.com/istyle-inc/multimissile"
+	"github.com/istyle-inc/multimissile/config"
+	"github.com/istyle-inc/multimissile/jsonrpc"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -19,7 +19,7 @@ func responseHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, fmt.Sprintf("%s", r.URL))
 }
 
-func TestWideBulletHandler(t *testing.T) {
+func TestmultimissileHandler(t *testing.T) {
 	assert := assert.New(t)
 
 	muxGET := http.NewServeMux()
@@ -31,10 +31,10 @@ func TestWideBulletHandler(t *testing.T) {
 	go http.ListenAndServe(":30002", muxPOST)
 
 	var err error
-	wbt.Config, err = config.Load("../config/example.toml")
+	msl.Config, err = config.Load("../config/example.toml")
 	assert.Nil(err)
 
-	ts := httptest.NewServer(http.HandlerFunc(wideBulletHandler))
+	ts := httptest.NewServer(http.HandlerFunc(multimissileHandler))
 	defer ts.Close()
 
 	payload := `[

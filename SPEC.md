@@ -1,15 +1,15 @@
-# Specification for Widebullet
+# Specification for multimissile
 
-Widebullet is RESTful API gateway with JSON-RPC. It accepts a HTTP request based JSON-RPC.
+multimissile is RESTful API gateway with JSON-RPC. It accepts a HTTP request based JSON-RPC.
 
 ## API
 
-Widebullet has the APIs below.
+multimissile has the APIs below.
 
- * [POST /wbt](#post-wbt)
+ * [POST /msl](#post-msl)
  * [GET /stat/go](#get-statgo)
 
-### POST /wbt
+### POST /msl
 
 Accepts a HTTP request based JSON-RPC and proxies each converted HTTP request to a corresponding endpoint.
 And User-Agent and X-Forwarded-For in a request header are forwarded.
@@ -63,7 +63,7 @@ The definitions of parameters are below.
 |id              |string|ID string                                |o       |                                  |
 
 
-When Widebullet receives an invalid request(for example, malformed body is included), a status of response it returns is 400(Bad Request).
+When multimissile receives an invalid request(for example, malformed body is included), a status of response it returns is 400(Bad Request).
 
 ### GET /stat/go
 
