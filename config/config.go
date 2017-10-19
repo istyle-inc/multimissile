@@ -21,7 +21,8 @@ const (
 	DefaultIdleConnTimeout = 30
 	// DefaultProxyReadTimeout default time proxy read will be timeout
 	DefaultProxyReadTimeout = 60
-	// DefaultShutdownTimeout this might not be used any where?
+	// DefaultShutdownTimeout default time to shutdown
+	// must confirm this might not be used any where?
 	DefaultShutdownTimeout = 10
 )
 
@@ -31,7 +32,7 @@ type Config struct {
 	LogLevel            string     `validate:"required"`
 	Timeout             int        `validate:"required"`
 	MaxIdleConnsPerHost int        `validate:"required"`
-	DisableCompression  bool       `validate:"required"`
+	DisableCompression  bool       `validate:""`
 	IdleConnTimeout     int        `validate:"required"`
 	ProxyReadTimeout    int        `validate:"required"`
 	ShutdownTimeout     int        `validate:"required"`
@@ -64,7 +65,6 @@ func initialize() Config {
 func LoadBytes(bytes []byte) (config Config, err error) {
 	config = initialize()
 	err = toml.Unmarshal(bytes, &config)
-
 	return config, err
 }
 
