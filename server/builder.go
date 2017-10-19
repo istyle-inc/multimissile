@@ -76,17 +76,17 @@ func buildHttpError2JsonRpcErrorResponse(resp *http.Response, id string, time fl
 func buildHttpRequest(reqj *jsonrpc.Request, forwardHeaders *http.Header) (*http.Request, error) {
 	var reqh *http.Request
 
-	ep, err := config.FindTo(msl.Config, reqj.To)
+	ep, err := config.FindEndpoint(msl.Config, reqj.To)
 	if err != nil {
 		return reqh, err
 	}
 
-	es, err := buildURLEncodedString(reqj.Params, reqj.HttpMethod)
+	es, err := buildURLEncodedString(reqj.Params, reqj.HTTPMethod)
 	if err != nil {
 		return reqh, err
 	}
 
-	switch reqj.HttpMethod {
+	switch reqj.HTTPMethod {
 	case "POST":
 		uri := buildRequestURI(ep.To, reqj.Method, "")
 		reqh, err = http.NewRequest("POST", uri, strings.NewReader(es))

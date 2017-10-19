@@ -2,30 +2,26 @@ package jsonrpc
 
 import (
 	"fmt"
+	"net/http"
+
+	validator "gopkg.in/go-playground/validator.v9"
 )
 
-const Version = "2.0"
-
-const (
-	ParseError          = -32700
-	InvalidRequestError = -32600
-	MethodNotFoundError = -32601
-	InvalidParamsError  = -32602
-	InternalError       = -32603
-)
-
+// RequestParams parameter map
 type RequestParams map[string]interface{}
 
+// Request define JSON-RPC Request
 type Request struct {
-	Version    string        `json:"jsonrpc"`
-	Method     string        `json:"method"`
-	HttpMethod string        `json:"http_method"`
+	Version    string        `json:"jsonrpc" validate:"eq=2.0"`
+	Path       string        `json:"path" validate:"required"`
+	HTTPMethod string        `json:"http_method" validate:""`
 	Params     RequestParams `json:"params,omitempty"`
-	ID         string        `json:"id"`
+	ID         string        `json:"id" validate:"required"`
 	// extention
-	To string `json:"to"`
+	Endpoint string `json:"endpoint"`
 }
 
+// Response define JSON-RPC Response
 type Response struct {
 	Version string  `json:"jsonrpc"`
 	Result  string  `json:"result,omitempty"`
@@ -34,17 +30,20 @@ type Response struct {
 	Time    float64 `json:"time,omitempty"`
 }
 
+// Error define Request-Error
 type Error struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
-	//Data    interface{} `json:"data"`
 }
 
+var validate = validator.New()
+
+// ValidateRequests validate request info
 func ValidateRequests(reqs *[]Request) error {
 	idMap := make(map[string]bool, len(*reqs))
 	for _, r := range *reqs {
 		if _, ok := idMap[r.ID]; ok {
-			return fmt.Errorf("ID:%d is duplicated.", r.ID)
+			return fmt.Errorf("ID:%s is duplicated", r.ID)
 		}
 		if err := validateRequest(&r); err != nil {
 			return err
@@ -54,19 +53,24 @@ func ValidateRequests(reqs *[]Request) error {
 	return nil
 }
 
-func validateRequest(r *Request) error {
-	if r.Version != Version {
-		return fmt.Errorf("malformed JSON-RPC version: %s", r.Version)
-	}
-	if r.Method == "" {
-		return fmt.Errorf("empty method")
+func validateRequest(r *Request) (err error) {
+
+	if err = validate.Struct(r); err != nil {
+		return err
 	}
 	// empty method is treated as GET.
-	if r.HttpMethod != "" && r.HttpMethod != "GET" && r.HttpMethod != "POST" {
-		return fmt.Errorf("malformed HTTP method: %s", r.HttpMethod)
-	}
-	if r.ID == "" {
-		return fmt.Errorf("empty id")
+	if !validMethod(r.HTTPMethod) {
+		return fmt.Errorf("malformed HTTP method: %s", r.HTTPMethod)
 	}
 	return nil
+}
+
+func validMethod(m string) bool {
+	switch m {
+	case "", http.MethodGet, http.MethodPost, http.MethodHead, http.MethodPut, http.MethodPatch,
+		http.MethodDelete, http.MethodConnect, http.MethodOptions, http.MethodTrace:
+		return true
+	default:
+		return false
+	}
 }

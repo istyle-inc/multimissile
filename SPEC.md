@@ -20,8 +20,8 @@ The JSON below is a request-body example.
 [
   {
     "jsonrpc": "2.0",
-    "ep": "ep-1",
-    "method": "/user/get",
+    "endpoint": "ep-1",
+    "path": "/user/get",
     "params": {
       "user_id": 1
     },
@@ -29,9 +29,9 @@ The JSON below is a request-body example.
   },
   {
     "jsonrpc": "2.0",
-    "ep": "ep-1",
+    "endpoint": "ep-1",
     "http_method": "GET",
-    "method": "/item/get",
+    "path": "/item/get",
     "params": {
       "item_id": 2
     },
@@ -41,7 +41,7 @@ The JSON below is a request-body example.
     "jsonrpc": "2.0",
     "ep": "ep-2",
     "http_method": "POST",
-    "method": "/item/update",
+    "path": "/item/update",
     "params": {
       "item_id": 2,
       "desc": "update"

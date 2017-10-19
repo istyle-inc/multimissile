@@ -42,7 +42,7 @@ type Config struct {
 // EndPoint struct of one of Endpoints
 type EndPoint struct {
 	Name                   string `validate:"required"`
-	To                     string `validate:"required"`
+	URL                    string `validate:"required"`
 	ProxySetHeaders        [][]string
 	ProxyPassHeaders       [][]string
 	AcceptableHTTPStatuses []int
@@ -86,8 +86,8 @@ func Load(confPath string) (Config, error) {
 	return config, err
 }
 
-// FindTo search endpoint using name
-func FindTo(conf Config, name string) (EndPoint, error) {
+// FindEndpoint search endpoint using name
+func FindEndpoint(conf Config, name string) (EndPoint, error) {
 	for _, ep := range conf.Endpoints {
 		if ep.Name == name {
 			return ep, nil

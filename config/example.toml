@@ -9,7 +9,7 @@ ShutdownTimeout = 15
 
 [[Endpoints]]
 Name = "ep-1"
-To = "127.0.0.1:30001"
+URL = "127.0.0.1:30001"
 ProxySetHeaders = [
     ["Host", "ep1.example.com"],
 ]
@@ -24,7 +24,7 @@ AcceptableHTTPStatuses = [
 
 [[Endpoints]]
 Name = "ep-2"
-To = "http://127.0.0.1:30002"
+URL = "http://127.0.0.1:30002"
 ProxySetHeaders = [
     ["Host", "ep2.example.com"],
 ]
