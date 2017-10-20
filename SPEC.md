@@ -39,7 +39,7 @@ The JSON below is a request-body example.
   },
   {
     "jsonrpc": "2.0",
-    "ep": "ep-2",
+    "endpoint": "ep-2",
     "http_method": "POST",
     "path": "/item/update",
     "params": {
@@ -56,9 +56,9 @@ The definitions of parameters are below.
 |name            |type  |description                              |required|note                              |
 |----------------|------|-----------------------------------------|--------|----------------------------------|
 |jsonrpc         |string|version number of JSON-RPC               |o       |fixed as 2.0                      |
-|ep              |string|endpoint name                            |o       |selected in Endpoints Section     |
+|endpoint        |string|endpoint name                            |o       |selected in Endpoints Section     |
 |http_method     |string|method string for HTTP                   |o       |HTTP method string. GET by default|
-|method          |string|method string                            |o       |URI                               |
+|path            |string|method string                            |o       |URI                               |
 |params          |object|parameters for method                    |o       |                                  |
 |id              |string|ID string                                |o       |                                  |
 
