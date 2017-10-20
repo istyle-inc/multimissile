@@ -38,9 +38,9 @@ func TestmultimissileHandler(t *testing.T) {
 	defer ts.Close()
 
 	payload := `[
-    {"jsonrpc": "2.0", "ep": "ep-1",                        "method": "/user/get",    "params": { "user_id": 1 },                   "id": "1"},
-    {"jsonrpc": "2.0", "ep": "ep-1", "http_method": "GET",  "method": "/item/get",    "params": { "item_id": 2 },                   "id": "2"},
-    {"jsonrpc": "2.0", "ep": "ep-2", "http_method": "POST", "method": "/item/update", "params": { "item_id": 2, "desc": "update" }, "id": "3"}
+    {"jsonrpc": "2.0", "endpoint": "ep-1",                        "path": "/user/get",    "params": { "user_id": 1 },                   "id": "1"},
+    {"jsonrpc": "2.0", "endpoint": "ep-1", "http_method": "GET",  "path": "/item/get",    "params": { "item_id": 2 },                   "id": "2"},
+    {"jsonrpc": "2.0", "endpoint": "ep-2", "http_method": "POST", "path": "/item/update", "params": { "item_id": 2, "desc": "update" }, "id": "3"}
 ]
 `
 	res, err := http.Post(ts.URL, "application/json", strings.NewReader(payload))

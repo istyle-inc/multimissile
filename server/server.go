@@ -19,7 +19,7 @@ import (
 )
 
 var (
-	HttpClient http.Client
+	HTTPClient http.Client
 )
 
 // RegisterHandlers sets handler to serve.
@@ -33,7 +33,7 @@ func RegisterHandlers(mux *http.ServeMux) {
 // SetupClient setups http.Client (which is globally used in this package)
 // with given config.
 func SetupClient(config *config.Config) {
-	HttpClient = http.Client{
+	HTTPClient = http.Client{
 		Timeout: time.Duration(config.Timeout) * time.Second,
 		Transport: &http.Transport{
 			DialContext: (&net.Dialer{
@@ -112,7 +112,7 @@ func sendTextResponse(w http.ResponseWriter, result string, code int) {
 	fmt.Fprint(w, result)
 }
 
-func sendJsonResponse(w http.ResponseWriter, result string) {
+func sendJSONResponse(w http.ResponseWriter, result string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Server", msl.ServerHeader())
 	fmt.Fprint(w, result)
@@ -144,7 +144,7 @@ func multimissileHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resps, err := jsonRpc2Http(&reqs, &r.Header)
+	resps, err := jsonRPC2HTTP(&reqs, &r.Header)
 	if err != nil {
 		accessLog(r, &reqs, stime, http.StatusBadGateway)
 		errorLog(wlog.Error, err.Error())
@@ -160,7 +160,7 @@ func multimissileHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	sendJsonResponse(w, string(bytes))
+	sendJSONResponse(w, string(bytes))
 
 	accessLog(r, &reqs, stime, http.StatusOK)
 }

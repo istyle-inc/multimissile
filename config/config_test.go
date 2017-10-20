@@ -75,5 +75,5 @@ func TestFindEndpoint(t *testing.T) {
 	assert.Equal("X-Auth-Token2", ep.ProxyPassHeaders[0][1])
 
 	_, err = FindEndpoint(c, "ep-3")
-	assert.NotNil(err)s
+	assert.NotNil(err)
 }

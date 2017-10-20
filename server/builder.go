@@ -35,48 +35,51 @@ func buildURLEncodedString(params jsonrpc.RequestParams, method string) (string,
 		}
 	}
 
-	if method == "POST" {
+	if method == http.MethodPost || method == http.MethodPut || method == http.MethodPatch {
 		return values.Encode(), nil
 	}
 
 	return fmt.Sprintf("?%s", values.Encode()), nil
 }
 
-func buildJsonRpcResponse(body, id string, time float64) jsonrpc.Response {
+func buildJSONRPCResponse(body, id string, time float64, status int) jsonrpc.Response {
 	return jsonrpc.Response{
 		Version: jsonrpc.Version,
 		Result:  body,
+		Status:  status,
 		ID:      id,
 		Time:    time,
 	}
 }
 
-func buildJsonRpcErrorResponse(code int, msg, id string, time float64) jsonrpc.Response {
-	jsonRpcError := &jsonrpc.Error{
+func buildJSONRPCErrorResponse(code int, msg, id string, time float64, status int) jsonrpc.Response {
+	jsonRPCError := &jsonrpc.Error{
 		Code:    code,
+		Status:  status,
 		Message: msg,
 	}
 
 	return jsonrpc.Response{
 		Version: jsonrpc.Version,
-		Error:   jsonRpcError,
+		Error:   jsonRPCError,
+		Status:  status,
 		ID:      id,
 		Time:    time,
 	}
 }
 
-func buildHttpError2JsonRpcErrorResponse(resp *http.Response, id string, time float64) jsonrpc.Response {
+func buildHTTPError2JSONRPCErrorResponse(resp *http.Response, id string, time float64) jsonrpc.Response {
 	switch resp.StatusCode {
 	case http.StatusNotFound:
-		return buildJsonRpcErrorResponse(jsonrpc.MethodNotFoundError, resp.Status, id, time)
+		return buildJSONRPCErrorResponse(jsonrpc.MethodNotFoundError, resp.Status, id, time, resp.StatusCode)
 	}
-	return buildJsonRpcErrorResponse(jsonrpc.InternalError, resp.Status, id, time)
+	return buildJSONRPCErrorResponse(jsonrpc.InternalError, resp.Status, id, time, resp.StatusCode)
 }
 
-func buildHttpRequest(reqj *jsonrpc.Request, forwardHeaders *http.Header) (*http.Request, error) {
+func buildHTTPRequest(reqj *jsonrpc.Request, forwardHeaders *http.Header) (*http.Request, error) {
 	var reqh *http.Request
 
-	ep, err := config.FindEndpoint(msl.Config, reqj.To)
+	ep, err := config.FindEndpoint(msl.Config, reqj.Endpoint)
 	if err != nil {
 		return reqh, err
 	}
@@ -87,16 +90,16 @@ func buildHttpRequest(reqj *jsonrpc.Request, forwardHeaders *http.Header) (*http
 	}
 
 	switch reqj.HTTPMethod {
-	case "POST":
-		uri := buildRequestURI(ep.To, reqj.Method, "")
-		reqh, err = http.NewRequest("POST", uri, strings.NewReader(es))
+	case http.MethodPost, http.MethodPut, http.MethodPatch:
+		uri := buildRequestURI(ep.URL, reqj.Path, "")
+		reqh, err = http.NewRequest(reqj.HTTPMethod, uri, strings.NewReader(es))
 		if err != nil {
 			return reqh, err
 		}
 		reqh.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	default:
-		uri := buildRequestURI(ep.To, reqj.Method, es)
-		reqh, err = http.NewRequest("GET", uri, nil)
+		uri := buildRequestURI(ep.URL, reqj.Path, es)
+		reqh, err = http.NewRequest(reqj.HTTPMethod, uri, nil)
 		if err != nil {
 			return reqh, err
 		}

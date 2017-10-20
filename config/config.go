@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"io/ioutil"
+	"net/http"
 
 	"github.com/BurntSushi/toml"
 	"gopkg.in/go-playground/validator.v9"
@@ -25,6 +26,19 @@ const (
 	// must confirm this might not be used any where?
 	DefaultShutdownTimeout = 10
 )
+
+var defaultAcceptableHTTPStatuses = []int{
+	http.StatusOK,
+	http.StatusCreated,
+	http.StatusAccepted,
+	http.StatusNonAuthoritativeInfo,
+	http.StatusNoContent,
+	http.StatusResetContent,
+	http.StatusPartialContent,
+	http.StatusMultiStatus,
+	http.StatusAlreadyReported,
+	http.StatusIMUsed,
+}
 
 // Config struct of configure
 type Config struct {
@@ -78,6 +92,14 @@ func Load(confPath string) (Config, error) {
 
 	if config, err = LoadBytes(bytes); err != nil {
 		return config, err
+	}
+	for i := range config.Endpoints {
+		ep := config.Endpoints[i]
+		if len(ep.AcceptableHTTPStatuses) == 0 &&
+			len(ep.ExceptableHTTPStatuses) == 0 {
+			ep.AcceptableHTTPStatuses = defaultAcceptableHTTPStatuses
+		}
+		config.Endpoints[i] = ep
 	}
 
 	validate := validator.New()

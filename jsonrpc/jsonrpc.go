@@ -7,6 +7,16 @@ import (
 	validator "gopkg.in/go-playground/validator.v9"
 )
 
+const Version = "2.0"
+
+const (
+	ParseError          = -32700
+	InvalidRequestError = -32600
+	MethodNotFoundError = -32601
+	InvalidParamsError  = -32602
+	InternalError       = -32603
+)
+
 // RequestParams parameter map
 type RequestParams map[string]interface{}
 
@@ -24,6 +34,7 @@ type Request struct {
 // Response define JSON-RPC Response
 type Response struct {
 	Version string  `json:"jsonrpc"`
+	Status  int     `json:"status"`
 	Result  string  `json:"result,omitempty"`
 	Error   *Error  `json:"error,omitempty"`
 	ID      string  `json:"id"`
@@ -33,6 +44,7 @@ type Response struct {
 // Error define Request-Error
 type Error struct {
 	Code    int    `json:"code"`
+	Status  int    `json:"status"`
 	Message string `json:"message"`
 }
 
