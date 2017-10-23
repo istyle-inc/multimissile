@@ -19,24 +19,24 @@ A configuration for multimissile has some sections. A example is [here](config/e
 
 ## Endpoints Section
 
-|name           |type          |description                        |default|note|
-|---------------|--------------|-----------------------------------|-------|----|
-|Name           |string        |Endpoint name                      |       |    |
-|Ep             |string        |Endpoint URL                       |       |    |
+|name           |type          |description                         |default|note|
+|---------------|--------------|------------------------------------|-------|----|
+|Name           |string        |Endpoint name                       |       |    |
+|URL            |string        |Endpoint URL                        |       |    |
 |ProxySetHeaders|array of array|Headers appended on proxying request|       |    |
 
-As a scheme, **http** and **https** are available for **Ep**.
+As a scheme, **http** and **https** are available for **To**.
 
 ```
-Ep = "http://example.com"
+URL = "http://example.com"
 # or
-Ep = "https://example.com"
+URL = "https://example.com"
 ```
 
 If a scheme is not specified, **http** is used.
 
 ```
-Ep = "example.com"
+URL = "example.com"
 ```
 
 * example.com

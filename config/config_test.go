@@ -50,30 +50,30 @@ ProxyReadTimeout = 120
 	assert.Equal(120, c.ProxyReadTimeout)
 }
 
-func TestFindEp(t *testing.T) {
+func TestFindEndpoint(t *testing.T) {
 	assert := assert.New(t)
 
 	c, err := Load("./example.toml")
 	assert.Nil(err)
 
-	ep, err := FindEp(c, "ep-1")
+	ep, err := FindEndpoint(c, "ep-1")
 	assert.Nil(err)
 	assert.Equal("ep-1", ep.Name)
-	assert.Equal("127.0.0.1:30001", ep.Ep)
+	assert.Equal("127.0.0.1:30001", ep.URL)
 	assert.Equal("Host", ep.ProxySetHeaders[0][0])
 	assert.Equal("ep1.example.com", ep.ProxySetHeaders[0][1])
 	assert.Equal("Authorization", ep.ProxyPassHeaders[0][0])
 	assert.Equal("X-Auth-Token", ep.ProxyPassHeaders[0][1])
 
-	ep, err = FindEp(c, "ep-2")
+	ep, err = FindEndpoint(c, "ep-2")
 	assert.Nil(err)
 	assert.Equal("ep-2", ep.Name)
-	assert.Equal("http://127.0.0.1:30002", ep.Ep)
+	assert.Equal("http://127.0.0.1:30002", ep.URL)
 	assert.Equal("Host", ep.ProxySetHeaders[0][0])
 	assert.Equal("ep2.example.com", ep.ProxySetHeaders[0][1])
 	assert.Equal("Authorization", ep.ProxyPassHeaders[0][0])
 	assert.Equal("X-Auth-Token2", ep.ProxyPassHeaders[0][1])
 
-	_, err = FindEp(c, "ep-3")
+	_, err = FindEndpoint(c, "ep-3")
 	assert.NotNil(err)
 }

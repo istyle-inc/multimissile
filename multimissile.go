@@ -9,7 +9,8 @@ import (
 )
 
 const (
-	Version = "0.3.1"
+	Version    = "0.0.1"
+	WbtVersion = "0.3.1"
 )
 
 var (
@@ -19,15 +20,17 @@ var (
 )
 
 func ServerHeader() string {
-	return fmt.Sprintf("multimissile %s", Version)
+	return fmt.Sprintf("MultiMissile %s", Version)
 }
 
 func PrintVersion() {
 	fmt.Printf(`msl %s
 Compiler: %s %s
-Copyright (C) 2016 Mercari, Inc.
+Copyright (C) 2017 Istyle, Inc.
+based on wbt Version %s Copyright (C) 2016 Mercari, Inc.
 `,
 		Version,
 		runtime.Compiler,
-		runtime.Version())
+		runtime.Version(),
+		WbtVersion)
 }

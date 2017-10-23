@@ -20,8 +20,8 @@ The JSON below is a request-body example.
 [
   {
     "jsonrpc": "2.0",
-    "ep": "ep-1",
-    "method": "/user/get",
+    "endpoint": "ep-1",
+    "path": "/user/get",
     "params": {
       "user_id": 1
     },
@@ -29,9 +29,9 @@ The JSON below is a request-body example.
   },
   {
     "jsonrpc": "2.0",
-    "ep": "ep-1",
+    "endpoint": "ep-1",
     "http_method": "GET",
-    "method": "/item/get",
+    "path": "/item/get",
     "params": {
       "item_id": 2
     },
@@ -39,9 +39,9 @@ The JSON below is a request-body example.
   },
   {
     "jsonrpc": "2.0",
-    "ep": "ep-2",
+    "endpoint": "ep-2",
     "http_method": "POST",
-    "method": "/item/update",
+    "path": "/item/update",
     "params": {
       "item_id": 2,
       "desc": "update"
@@ -56,9 +56,9 @@ The definitions of parameters are below.
 |name            |type  |description                              |required|note                              |
 |----------------|------|-----------------------------------------|--------|----------------------------------|
 |jsonrpc         |string|version number of JSON-RPC               |o       |fixed as 2.0                      |
-|ep              |string|endpoint name                            |o       |selected in Endpoints Section     |
+|endpoint        |string|endpoint name                            |o       |selected in Endpoints Section     |
 |http_method     |string|method string for HTTP                   |o       |HTTP method string. GET by default|
-|method          |string|method string                            |o       |URI                               |
+|path            |string|method string                            |o       |URI                               |
 |params          |object|parameters for method                    |o       |                                  |
 |id              |string|ID string                                |o       |                                  |
 
