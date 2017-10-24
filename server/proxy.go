@@ -73,8 +73,8 @@ func notSuccess(thresholds []int, value int) bool {
 func fail(thresholds []int, value int) bool {
 	for _, v := range thresholds {
 		if v == value {
-			return true
+			return false
 		}
 	}
-	return false
+	return true
 }
